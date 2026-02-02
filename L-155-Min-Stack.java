@@ -29,15 +29,11 @@ Complexity
 Time Complexity
 
 push() → O(1)
-
 pop() → O(1)
-
 top() → O(1)
-
 getMin() → O(1)
 
 Space Complexity
-
 O(n)
 Two stacks are used, each storing up to n elements.  
 
