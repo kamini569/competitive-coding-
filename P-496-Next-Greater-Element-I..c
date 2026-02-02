@@ -1,53 +1,58 @@
 Intuition
 
-To find how many days we must wait for a warmer temperature, we need to quickly know the next greater temperature for each day.
-Using a stack helps track future days that can be warmer than the current day.
+For each element in nums1, we need to find the first greater element to its right in nums2.
+If no such element exists, the answer is -1.
 
 Approach
 
-Traverse the temperature array from right to left
+For each element in nums1:
 
-Use a stack to store indices of days
+Find its position in nums2
 
-For each day:
+From that position, scan the right side of nums2
 
-Remove all days from the stack that have temperatures less than or equal to the current day
+The first element greater than the current value is the next greater element
 
-If the stack is empty, no warmer day exists → answer is 0
+If no greater element is found, store -1
 
-Otherwise, the top of the stack gives the next warmer day
-
-Push the current index into the stack
+Store the result for each element in the answer array
 
 Complexity
 Time Complexity
 
-O(n)
-Each element is pushed and popped from the stack at most once.
+O(n × m)
+For each element of nums1, we may scan nums2 and its remaining part.
 
 Space Complexity
 
-O(n)
-Extra space is used for the stack and result array.
+O(1)
+Only a fixed-size result array is used (excluding output array).
 
 Solution
-#include <vector>
-using namespace std;
+#include <stdlib.h>
 
-class Solution {
-public:
-    vector<int> dailyTemperatures(vector<int>& temperatures) {
-        int n = temperatures.size();
-        vector<int> result(n, 0);
-        vector<int> stack; // stores indices
+int* nextGreaterElement(int* nums1, int nums1Size, int* nums2, int nums2Size, int* returnSize) {
+    *returnSize = nums1Size;
+    int* ans = (int*)malloc(nums1Size * sizeof(int));
 
-        for (int i = n - 1; i >= 0; --i) {
-            while (!stack.empty() && temperatures[i] >= temperatures[stack.back()]) {
-                stack.pop_back();
+    for (int i = 0; i < nums1Size; i++) {
+        int next = -1;
+
+        // find nums1[i] in nums2
+        for (int j = 0; j < nums2Size; j++) {
+            if (nums2[j] == nums1[i]) {
+                // find next greater
+                for (int k = j + 1; k < nums2Size; k++) {
+                    if (nums2[k] > nums1[i]) {
+                        next = nums2[k];
+                        break;
+                    }
+                }
+                break;
             }
-            result[i] = stack.empty() ? 0 : stack.back() - i;
-            stack.push_back(i);
         }
-        return result;
+        ans[i] = next;
     }
-};
+
+    return ans;
+}
